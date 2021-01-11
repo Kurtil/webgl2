@@ -23,11 +23,20 @@ const program = createProgram(gl, vertexShader, fragmentShader);
 
 const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
 
+const resolutionUniformLocation = gl.getUniformLocation(
+  program,
+  "u_resolution"
+);
+const colorLocation = gl.getUniformLocation(
+  program,
+  "u_color"
+);
+
 const positionBuffer = gl.createBuffer();
 
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-const positions = [0, 0, 0, 0.5, 0.7, 0];
+const positions = [10, 20, 380, 20, 10, 30, 10, 30, 380, 20, 380, 30];
 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
 const vao = gl.createVertexArray();
@@ -58,11 +67,14 @@ function drawScene() {
 
   gl.useProgram(program);
 
+  gl.uniform2f(resolutionUniformLocation, gl.canvas.width / devicePixelRatio, gl.canvas.height / devicePixelRatio);
+  gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
+
   gl.bindVertexArray(vao);
 
   const primitiveType = gl.TRIANGLES;
   const offset = 0;
-  const count = 3;
+  const count = 6;
   gl.drawArrays(primitiveType, offset, count);
 }
 
