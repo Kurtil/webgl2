@@ -1,9 +1,24 @@
 import { createShader, createProgram, resize } from "./glUtils.js";
 import vertexShaderSource from "./shaders/vertex.default.js";
 import fragmentShaderSource from "./shaders/fragment.default.js";
+import Camera from "./camera/camera.js";
+import Ticker from "./ticker/ticker.js";
+import Settings from "./settings/settings.js";
 
 /** @type { HTMLCanvasElement } */
 const canvas = document.getElementById("canvas");
+
+const viewer = {
+  canvas,
+  ticker: Ticker.make(),
+  settings: Settings.make(),
+};
+
+const camera = Camera.make(viewer);
+
+viewer.camera = camera;
+
+camera.on("update", arg => console.log(arg));
 
 const gl = canvas.getContext("webgl2");
 if (!gl) {
@@ -27,10 +42,7 @@ const resolutionUniformLocation = gl.getUniformLocation(
   program,
   "u_resolution"
 );
-const colorLocation = gl.getUniformLocation(
-  program,
-  "u_color"
-);
+const colorLocation = gl.getUniformLocation(program, "u_color");
 
 const positionBuffer = gl.createBuffer();
 
@@ -67,7 +79,11 @@ function drawScene() {
 
   gl.useProgram(program);
 
-  gl.uniform2f(resolutionUniformLocation, gl.canvas.width / devicePixelRatio, gl.canvas.height / devicePixelRatio);
+  gl.uniform2f(
+    resolutionUniformLocation,
+    gl.canvas.width / devicePixelRatio,
+    gl.canvas.height / devicePixelRatio
+  );
   gl.uniform4f(colorLocation, Math.random(), Math.random(), Math.random(), 1);
 
   gl.bindVertexArray(vao);
@@ -79,3 +95,5 @@ function drawScene() {
 }
 
 drawScene();
+
+window.gl = gl;

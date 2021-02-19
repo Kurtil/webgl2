@@ -30,14 +30,14 @@ function resize(gl) {
   const canvas = gl.canvas;
 
   const dpr = window.devicePixelRatio;
-  const displayWidth  = Math.round(canvas.clientWidth * dpr);
+  const displayWidth = Math.round(canvas.clientWidth * dpr);
   const displayHeight = Math.round(canvas.clientHeight * dpr);
 
-  const needResize = canvas.width  !== displayWidth ||
-                     canvas.height !== displayHeight;
+  const needResize =
+    canvas.width !== displayWidth || canvas.height !== displayHeight;
 
   if (needResize) {
-    canvas.width  = displayWidth;
+    canvas.width = displayWidth;
     canvas.height = displayHeight;
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -46,4 +46,18 @@ function resize(gl) {
   return needResize;
 }
 
-export { createShader, createProgram, resize };
+/**
+ *
+ * @param { WebGL2RenderingContext } gl
+ * @param {*} uniformsData
+ */
+function makeUniformsSetters(gl, uniformsData) {
+  const program = gl.getParameter(gl.CURRENT_PROGRAM);
+  const numberOfUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < numberOfUniforms; i++) {
+    const uniformInfo = gl.getActiveUniform(program, i);
+    console.log(uniformInfo);
+  }
+}
+
+export { createShader, createProgram, resize, makeUniformsSetters };
