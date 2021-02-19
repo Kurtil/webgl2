@@ -10,13 +10,14 @@ const viewer = {
   canvas,
   ticker: Ticker.make(),
   settings: Settings.make(),
+  picker: {
+    pick() {},
+  },
 };
 
 const camera = Camera.make(viewer);
 
 viewer.camera = camera;
-
-camera.on("update", arg => console.log(arg));
 
 const gl = canvas.getContext("webgl2");
 if (!gl) {
@@ -28,4 +29,9 @@ if (!gl) {
 viewer.gl = gl;
 
 const context = Context.make(gl);
-context.drawScene();
+
+viewer.ticker.addOnce("render", () => context.drawScene());
+
+viewer.camera.on("update", transform => context.drawScene(transform));
+
+viewer.ticker.start();

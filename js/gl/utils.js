@@ -46,18 +46,4 @@ function resize(gl) {
   return needResize;
 }
 
-/**
- *
- * @param { WebGL2RenderingContext } gl
- * @param {*} uniformsData
- */
-function makeUniformsSetters(gl, uniformsData) {
-  const program = gl.getParameter(gl.CURRENT_PROGRAM);
-  const numberOfUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-  for (let i = 0; i < numberOfUniforms; i++) {
-    const uniformInfo = gl.getActiveUniform(program, i);
-    console.log(uniformInfo);
-  }
-}
-
-export { createShader, createProgram, resize, makeUniformsSetters };
+export { createShader, createProgram, resize };

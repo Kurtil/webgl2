@@ -65,8 +65,8 @@ function makeHTMLElementUIHandler(el, preventDefault = true) {
     state.dragging = true;
     document.body.style.cursor = "move";
     events.emit("drag", {
-      dx: e.movementX * window.devicePixelRatio,
-      dy: e.movementY * window.devicePixelRatio,
+      dx: e.movementX,
+      dy: e.movementY,
       keys: keys(e),
     });
   }
@@ -127,8 +127,8 @@ function keys(event = {}) {
 
 function position(event = {}) {
   return {
-    x: Math.max(event.offsetX, 0) * window.devicePixelRatio,
-    y: Math.max(event.offsetY, 0) * window.devicePixelRatio,
+    x: Math.max(event.offsetX, 0),
+    y: Math.max(event.offsetY, 0),
   };
 }
 

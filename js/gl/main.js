@@ -2,6 +2,8 @@ import { createShader, createProgram, resize } from "./utils.js";
 import vertexShaderSource from "./shaders/vertex.default.js";
 import fragmentShaderSource from "./shaders/fragment.default.js";
 
+import { Matrix } from "../../../node_modules/@pixi/math/dist/esm/math.js";
+
 const Context = {
   make(gl) {
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -23,6 +25,8 @@ const Context = {
       "u_resolution"
     );
     const colorLocation = gl.getUniformLocation(program, "u_color");
+
+    const matrixLocation = gl.getUniformLocation(program, "u_matrix");
 
     const positionBuffer = gl.createBuffer();
 
@@ -52,7 +56,7 @@ const Context = {
     ); // WARNING : it binds the current ARRAY_BUFFER to the attribute.
 
     return {
-      drawScene() {
+      drawScene(transform = Matrix.IDENTITY) {
         resize(gl);
 
         gl.clearColor(0, 0, 0, 0);
@@ -72,6 +76,24 @@ const Context = {
           Math.random(),
           1
         );
+
+        // Ex of PIXI.Matrix [1, 0, 184, 0, 1, 224, 0, 0, 1]
+        // | a | c | tx|
+        // | b | d | ty|
+        // | 0 | 0 | 1 |
+        const transformArray = new Float32Array([
+          transform.a,
+          transform.b,
+          0,
+          transform.c,
+          transform.d,
+          0,
+          transform.tx,
+          transform.ty,
+          1,
+        ]);
+
+        gl.uniformMatrix3fv(matrixLocation, false, transformArray);
 
         gl.bindVertexArray(vao);
 
