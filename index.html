@@ -1,12 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>webgl2</title>
-</head>
-<body style="background-color: gray;">
-  <canvas id="canvas" style="width: 400px; height: 300px; border: black solid 1px;" ></canvas>
-  <script type="module" src="./js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>webgl2</title>
+  </head>
+  <body style="background-color: gray">
+    <canvas
+      id="canvas"
+      style="width: 400px; height: 300px; border: black solid 1px"
+    ></canvas>
+    <script type="module">
+      import Viewer from "./js/viewer.js";
+
+      const canvas = document.getElementById("canvas");
+
+      const viewer = Viewer.make({ canvas });
+
+      viewer.scene.addObject({
+        points: [10, 20, 380, 20, 10, 30, 10, 30, 380, 20, 380, 30],
+      });
+
+      viewer.scene.addObject({ points: [0, 0, 30, 30, 0, 30] });
+      viewer.scene.addObject({ points: [350, 30, 380, 0, 380, 30] });
+
+      window.viewer = viewer;
+    </script>
+  </body>
 </html>
