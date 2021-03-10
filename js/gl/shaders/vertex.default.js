@@ -1,10 +1,13 @@
 const vertexShaderSource = `#version 300 es
 
 in vec2 a_position;
+in vec4 a_color;
 
 uniform vec2 u_resolution;
 
 uniform mat3 u_matrix;
+
+out vec4 v_color;
 
 void main() {
   // Multiply the position by the matrix.
@@ -20,6 +23,8 @@ void main() {
   vec2 clipSpace = zeroToTwo - 1.0;
 
   gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+
+  v_color = a_color;
 }
 `;
 

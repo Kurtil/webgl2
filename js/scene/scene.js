@@ -7,7 +7,20 @@ const Scene = {
     let objectId = 1;
 
     function getPositions() {
-      return Array.from(objects.values()).flatMap(object => object.points);
+      return Array.from(objects.values()).flatMap(getObjectVertexData);
+    }
+
+    function getObjectVertexData(object) {
+      const vertexData = [];
+      object.points.forEach((point, i) => {
+        vertexData.push(point);
+        if (i % 2 !== 0) {
+          // is odd
+          vertexData.push(...object.color, 255); // opacity 1
+        }
+      });
+
+      return vertexData;
     }
 
     return {
@@ -16,6 +29,9 @@ const Scene = {
         if (!object?.points?.length > 0) {
           throw new Error("An object must have points");
         }
+
+        object.color = new Uint8ClampedArray(object.color || [0, 0, 0]); // black by default
+
         object.id = objectId++;
         objects.set(object.id, object);
 

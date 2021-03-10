@@ -19,9 +19,13 @@
 
       viewer.scene.addObject({
         points: [10, 20, 380, 20, 10, 30, 10, 30, 380, 20, 380, 30],
+        color: [255, 0, 255],
       });
 
-      viewer.scene.addObject({ points: [0, 0, 30, 30, 0, 30] });
+      viewer.scene.addObject({
+        points: [0, 0, 30, 30, 0, 30],
+        color: [255, 255, 255],
+      });
       viewer.scene.addObject({ points: [350, 30, 380, 0, 380, 30] });
 
       window.viewer = viewer;
