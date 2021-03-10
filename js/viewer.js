@@ -29,8 +29,8 @@ const Viewer = {
     viewer.ticker.addOnce("render", () => context.drawScene());
 
     viewer.camera.on("update", transform => context.drawScene(transform));
-    viewer.scene.on("update", ({ positions }) => {
-      context.updatePositions(positions);
+    viewer.scene.on("update", vertexData => {
+      context.updateVertexData(vertexData);
       context.drawScene(camera.transform);
     });
 

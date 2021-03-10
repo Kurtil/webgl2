@@ -48,45 +48,17 @@ const Context = {
 
     const vao = gl.createVertexArray();
 
-    let positionBuffer = null;
+    let vertexBuffer = null;
 
-    function updatePositions(positions = []) {
-      // TODO rename position and color
-      const DATA_PER_ELEMENT = 6;
-      this.count = positions.length / DATA_PER_ELEMENT; // color 4 + position 2
+    function updateVertexData({ dataView, count }) {
+      this.count = count;
 
-      const buffer = new ArrayBuffer(
-        this.count *
-          (2 * Float32Array.BYTES_PER_ELEMENT +
-            4 * Uint8ClampedArray.BYTES_PER_ELEMENT)
-      );
-      const dataView = new DataView(buffer);
-
-      positions.forEach((position, i) => {
-        const vertexIndex = Math.floor(i / DATA_PER_ELEMENT);
-        const vertexOffset =
-          vertexIndex *
-          (2 * Float32Array.BYTES_PER_ELEMENT +
-            4 * Uint8ClampedArray.BYTES_PER_ELEMENT);
-
-        const dataIndex = i - vertexIndex * DATA_PER_ELEMENT;
-        if ([0, 1].includes(dataIndex)) {
-          const dataOffset = dataIndex * Float32Array.BYTES_PER_ELEMENT;
-          dataView.setFloat32(vertexOffset + dataOffset, position, true);
-        } else {
-          const dataOffset =
-            2 * Float32Array.BYTES_PER_ELEMENT +
-            (dataIndex - 2) * Uint8ClampedArray.BYTES_PER_ELEMENT;
-          dataView.setUint8(vertexOffset + dataOffset, position);
-        }
-      });
-
-      if (positionBuffer) {
-        gl.deleteBuffer(positionBuffer);
+      if (vertexBuffer) {
+        gl.deleteBuffer(vertexBuffer);
       }
-      positionBuffer = gl.createBuffer();
+      vertexBuffer = gl.createBuffer();
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
       gl.bufferData(gl.ARRAY_BUFFER, dataView, gl.STATIC_DRAW);
 
@@ -124,7 +96,7 @@ const Context = {
 
     return {
       count: 0,
-      updatePositions,
+      updateVertexData,
       drawScene(transform = Matrix.IDENTITY) {
         resize(gl);
 
