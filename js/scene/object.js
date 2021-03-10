@@ -8,7 +8,7 @@ function makeSceneObjectFactory() {
       vertexData.push(point);
       if (i % 2 !== 0) {
         // is odd
-        vertexData.push(...object.color, 255); // opacity 1
+        vertexData.push(object.zIndex, ...object.color, 255); // opacity 1
       }
     });
 
@@ -22,12 +22,12 @@ function makeSceneObjectFactory() {
         getObjectVertexData
       );
 
-      const DATA_PER_ELEMENT = 6;
-      const count = vertexData.length / DATA_PER_ELEMENT; // color 4 + position 2
+      const DATA_PER_ELEMENT = 7;
+      const count = vertexData.length / DATA_PER_ELEMENT; // position 3 + color 4
 
       const buffer = new ArrayBuffer(
         count *
-          (2 * Float32Array.BYTES_PER_ELEMENT +
+          (3 * Float32Array.BYTES_PER_ELEMENT +
             4 * Uint8ClampedArray.BYTES_PER_ELEMENT)
       );
       const dataView = new DataView(buffer);
@@ -36,17 +36,17 @@ function makeSceneObjectFactory() {
         const vertexIndex = Math.floor(i / DATA_PER_ELEMENT);
         const vertexOffset =
           vertexIndex *
-          (2 * Float32Array.BYTES_PER_ELEMENT +
+          (3 * Float32Array.BYTES_PER_ELEMENT +
             4 * Uint8ClampedArray.BYTES_PER_ELEMENT);
 
         const dataIndex = i - vertexIndex * DATA_PER_ELEMENT;
-        if ([0, 1].includes(dataIndex)) {
+        if ([0, 1, 2].includes(dataIndex)) {
           const dataOffset = dataIndex * Float32Array.BYTES_PER_ELEMENT;
           dataView.setFloat32(vertexOffset + dataOffset, data, true);
         } else {
           const dataOffset =
-            2 * Float32Array.BYTES_PER_ELEMENT +
-            (dataIndex - 2) * Uint8ClampedArray.BYTES_PER_ELEMENT;
+            3 * Float32Array.BYTES_PER_ELEMENT +
+            (dataIndex - 3) * Uint8ClampedArray.BYTES_PER_ELEMENT;
           dataView.setUint8(vertexOffset + dataOffset, data);
         }
       });
@@ -63,6 +63,7 @@ function makeSceneObjectFactory() {
 
       const object = {
         points: objectData.points,
+        zIndex: objectData.zIndex ?? 0,
       };
 
       object.color = new Uint8ClampedArray(objectData?.color || [0, 0, 0]); // black by default

@@ -22,6 +22,8 @@ const Context = {
 
     viewer.gl = gl;
 
+    gl.enable(gl.DEPTH_TEST);
+
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(
       gl,
@@ -66,7 +68,7 @@ const Context = {
 
       gl.enableVertexAttribArray(positionAttributeLocation);
 
-      const size = 2; // 2 components per iteration
+      const size = 3; // 2 components per iteration
       const type = gl.FLOAT; // the data is 32bit floats
       const normalize = false; // don't normalize the data
       const stride =
@@ -90,7 +92,7 @@ const Context = {
         gl.UNSIGNED_BYTE,
         true,
         stride,
-        2 * Float32Array.BYTES_PER_ELEMENT
+        3 * Float32Array.BYTES_PER_ELEMENT
       );
     }
 
@@ -102,6 +104,7 @@ const Context = {
 
         gl.clearColor(0, 0, 0, 0);
         gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clear(gl.DEPTH_BUFFER_BIT);
 
         if (this.count === 0) return;
 
